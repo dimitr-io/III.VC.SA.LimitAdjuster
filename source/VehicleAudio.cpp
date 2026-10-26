@@ -6,7 +6,8 @@
 // to 611 (0x860AF0). A vehicle added with a new model id reads past its end. The table moves to one that covers every
 // model id; new vehicles start with the first vehicle's entry, and data\gtasa_vehicleAudioSettings.cfg (one line per
 // vehicle: its IDE name and the 14 values of the entry) can set any of them. The file is read when the first vehicle
-// sound is set up, after the IDE files, so its names resolve to model ids.
+// sound is set up, after the IDE files, so its names resolve to model ids. A copy in a Mod Loader mod is used before
+// the game's (see FindDataFile).
 
 namespace
 {
@@ -45,8 +46,9 @@ namespace
 
     void LoadFile()
     {
-        std::ifstream file("data\\gtasa_vehicleAudioSettings.cfg");
-        if (!file)
+        auto path = limits::FindDataFile(L"data\\gtasa_vehicleAudioSettings.cfg");
+        std::ifstream file(path);
+        if (path.empty() || !file)
             return;
 
         auto getModelInfo = (void* (__cdecl*)(const char*, int*))0x4C5940;
@@ -86,7 +88,7 @@ namespace
             s.engineVolumeOffset = volume;
             applied++;
         }
-        core::Log("VehicleAudioSettings: {} entries from data\\gtasa_vehicleAudioSettings.cfg", applied);
+        core::Log("VehicleAudioSettings: {} entries from {}", applied, path.string());
     }
 
     void EnsureLoaded(SafetyHookContext&)

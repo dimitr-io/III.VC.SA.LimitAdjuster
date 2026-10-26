@@ -1,3 +1,10 @@
+Ioannidis fork
+---------------
+ * SA: radar icons up to 255 and train types from the fastman92 data files (data\gtasa_radarBlipSpriteFilenames.dat, data\gtasa_trainTypeCarriages.dat)
+ * SA: kills counted, parked cars and paintjobs for every model id, clothes archive with more than 550 files
+ * SA: a mission train loads the models its script didn't load (crashed the game)
+ * SA: data files the adjuster reads are also found in Mod Loader mods
+
 v2.0
 ---------------
  * Rewritten. Every limit grows on demand by default, nothing has to be configured

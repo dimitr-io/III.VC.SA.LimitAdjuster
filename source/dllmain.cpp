@@ -29,6 +29,9 @@ namespace
         limits::InstallEffects();
         limits::InstallHandling();
         limits::InstallVehicleAudio();
+        limits::InstallRadar();
+        limits::InstallTrains();
+        limits::InstallModelIds();
         limits::InstallProcedural();
         limits::InstallScm();
         limits::InstallOverlay();
