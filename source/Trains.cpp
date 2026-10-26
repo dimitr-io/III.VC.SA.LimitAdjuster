@@ -25,6 +25,7 @@ namespace
     const uintptr_t trackAdds[] = { 0x6F7B15, 0x6F7D2C }; // add esi, table / add ecx, table
 
     std::vector<int32_t> table;
+    uintptr_t tableAddress = VanillaTable; // the table the game reads (the hooks replace the instructions that hold it)
     std::vector<std::vector<std::string>> names; // per type, empty when the file doesn't name it
     uint32_t types = VanillaTypes;
     std::once_flag resolved;
@@ -90,7 +91,7 @@ namespace
     void MissionTrainHook(SafetyHookContext& ctx)
     {
         std::call_once(resolved, Resolve);
-        auto row = (const int32_t*)(mem::ReadDword(MissionTrainAdd + 1) + ctx.eax);
+        auto row = (const int32_t*)(tableAddress + ctx.eax);
         auto requestModel = (void (__cdecl*)(int, int))0x4087E0;          // CStreaming::RequestModel(id, flags)
         auto loadAllRequestedModels = (void (__cdecl*)(bool))0x40EA10;    // CStreaming::LoadAllRequestedModels
         bool requested = false;
@@ -127,6 +128,7 @@ namespace limits
             table.assign((size_t)types * RowSize, 0);
             memcpy(table.data(), (void*)VanillaTable, VanillaTypes * RowSize * sizeof(int32_t)); // types the file doesn't name
             auto address = (uint32_t)(uintptr_t)table.data();
+            tableAddress = address;
             mem::WriteDword(MissionTrainAdd + 1, address);
             for (auto add : trackAdds)
             {
